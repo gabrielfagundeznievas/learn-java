@@ -15,15 +15,16 @@ public class HomeController {
     }
 
     @GetMapping("greet/{name}")
-    public String greet(@PathVariable("name") String name) {
-        return "Hola " + name + ", ¡bienvenido!";
+    public String greet(@PathVariable() String name) {
+        return "Hola %s, ¡bienvenido!".formatted(name);
     }
     
     @GetMapping("formal-greet")
-    public String formalGreet(@RequestParam(name = "name", required = false) String name) {
-        if (name == null || name.isBlank()) {
-            return "Estimados/as, reciban un cordial saludo.";
-        }
-        return "Estimada " + name + ", reciba un cordial saludo.";
+    public String formalGreet(@RequestParam(required = false) String name) {
+        boolean hasName = name != null && !name.isBlank();
+
+        return hasName
+                ? "Estimada %s, reciba un cordial saludo.".formatted(name)
+                : "Estimados/as, reciban un cordial saludo.";
     }
 }
